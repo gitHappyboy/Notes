@@ -1,0 +1,168 @@
+﻿操作系统：直接操作硬件，封装系统调用，共程序使用
+桌面操作系统(windows macos)， 
+服务器操作系统(Linux ,服务器一般是远程维护)
+嵌入式(linux)
+移动操作系统(ios, Android(基于linux))
+虚拟机
+linux内核版 与发行版（只是在内核基础上加了套件而已，如redhat ,ubuntu）
+unix操作系统：linux, mac os, android, ios 等都是unix like操作系统
+由于unix闭源，linux被人开发加完善
+
+windows:前身是单用户操作系统
+unix,linux前身是多用户操作系统
+
+linux(如ubuntu)没有盘符(C E)这个概念，只有一个根目录/  文件夹来区分
+/home
+
+ls    list   查看当前文件下内容  //windows上是dir
+pwd   print work directory  当前所在文件路径
+cd [目录]   change directory   切换文件夹
+touch [文件名] touch  如果文件不存在，新建文件； 如果已存在，修改最新时间
+mkdir [目录名]  make directory  创建目录
+	mkdir -p a/b/c/d   递归创建a b c d四个目录
+rm[文件名]   remove   删除指定的文件名
+clear     clear   清屏
+rm -r 目录名
+command [-options] [parameter]
+
+command --help //简要介绍
+man command //详细介绍，manual用户手册
+Tab自动补全  两次Tab会提示可选的
+ctrl+c重新回到终端
+linux中以  .开头的文件是隐藏文件，ls -a可以查看到
+ls -l列表方式显示文件的详细 信息  // ls -lah
+终端中.表示当前目录， ..表示上一级目录
+ls中通配符的使用 ?/*/[]
+cd  或cd ~可以快速回到家目录
+/根目录   ~家目录  
+rm -f：强制删除，即使文件不存在也不会有错误提示
+rm -r：递归删除目录及其下面内容，删除目录必须-r
+rm -rf *: 删库到跑路
+tree[目录名]  以树状图列出文件目录结构   -d只显示目录
+cp 源文件 目标文件 要复制目录带上-r  -i覆盖文件前的提示
+mv 源文件 目标文件 移动文件或目录(重命名)  -i覆盖文件前的提示
+cat 文件：查看文件内容，完整显示  -b显示非空行号 -n显示行编号
+more文件：查看文件内容，分屏显示
+grep -nvi "hello world" 123.txt：在文本中搜索指定字符串
+^hello:行首为hello  world$:行尾为world
+echo 回声  echo  hello >a.txt  
+>:重定向到文件   >>:追加到文件   ls -lh  >>2.txt
+管道： 将一个命令的输出通过管道作为另一个命令的输入,常见more gerp
+ls -lha ~ | more    ;   ls -lha ~ | grep sys
+shutdown 选项 时间
+shutdown -r now ; shutdown now ; shutdown 20:25
+shutdown +10; shutdown -c取消
+ifconfig查看配置网卡信息
+	ifconfig | grep inet
+ping 127.0.0.1   //ping www.baidu.com
+ssh的默认端口是22
+ssh [-p port] user@remote    //xshell
+	user是远程机器上的用户名，不指定的话默认为当前用户
+	remote是远程机器的地址，可以是IP/域名，或者是别名
+	port端口不指定就默认是22
+	exit命令断开终端与远程服务器的连接
+
+scp -P port 01.py user@remote:Desktop/01.py:远程拷贝文件(本地->服务器，可以带-r复制文件夹)
+.ssh:保存ssh的所有相关配置信息
+
+免密码登录
+	>执行ssh-keygen即可生成SSH钥匙
+	>执行ssh-copy-id -p port user@remote 让远程服务器记住我们的公钥
+非对称加密算法
+	>使用公钥加密的数据，需要用私钥解密
+	>使用私钥加密的数据， 需要用公钥解密
+配置别名
+	>: ~/.ssh/config里加入配置 内容
+	
+ls -l权限查看 
+	硬链接数：通俗讲，就是有多少种方式，可以访问到当前目录或文件，文件通常都是1，子目录多就更多
+	
+chmod:可以修改用户/组 对 文件/目录的权限
+	> chmod +/-rwx 文件名|目录名
+	文件夹（目录下）必须要有可执行权限x
+sudo:substitute user,以其他身份来执行命令，预设为root
+	groupadd 组名   ; groupdel 组名; cat /etc/group 
+	chgrp -R 组名 文件/目录名  递归修改文件/目录的所属组
+	
+useradd -m -g dev zhangsan:添加新用户，-m自动建立用户家目录，-g指定用户所在组，否则和用户名相同
+passwd zhangsan :指定用户密码。
+userdel -r 用户名：删除用户，-r会自动删除用户家目录//如果useradd没使用-m，删掉重建最方便
+
+id [用户名]：查看用户对应的uid 和gid，用户代号和组代号
+who:查看当前所有登录的用户列表
+whoami:查看当前登录的用户的账户名
+		
+usermod:可以用来设置用户的主组/附加组 和登录shell
+	usermod -g 组 用户名  //主组
+	usermod -G 组 用户名 	//附加组
+		如:sudo usermod -G sudo zhangsan:把zhangsan加入sudo组，具有次权限
+	usermod -s /bin/bash 用户名 ，指定登录shell,默认是dash
+
+which: 可以查看执行命令所在位置
+/bin存放可执行文件，具体应用
+/sbin: system binary:系统方面的可执行文件
+
+su - 用户名：切换用户， -表示切换到目标用户的家目录
+	exit:退出当前登录帐户
+	su不接用户名，可以切换到root,但不安全，不推荐使用
+	
+chown:修改文件|目录的拥有者  //类似还有chgrp,  chmod 
+	chown 用户名 文件/目录名
+chmod -R 755 文件/目录名： 精确设置不同用户的权限
+		r:4 w:2 x:1
+		
+date:显示系统时间
+cal [-y]:显示日历
+
+df -h:disk free显示磁盘剩余空间大小
+du -h[目录名]:disk usage显示目录下的文件大小  -h:人性化显示
+
+ps a|u|x :process status，查看进程的详细状态信息
+	a:显示终端上的所有进程，包括其他用户的进程
+	u:显示进程的详细状态
+	x:显示没有控制终端的进程
+top:动态显示运行中的进程并且排序、
+kill [-9] 进程代号:终止代号的进程，-9表示强行终止
+	使用kill时，最好只终止当前用户自己开启的进程，不要去杀其他用户的，如root
+  
+find [路径] -name ".py" 
+软链接：类似与快捷方式
+	ln -s 被链接的源文件的完整路径 链接文件
+硬链接：如果没有-s选项，则会创建硬链接
+
+	在linux中，文件名和文件的数据是分开存储的。
+	在linux中，只有文件的 硬链接数==0 才会被删除
+    软链接链接指向文件名，硬链接直接指向文件数据本身
+
+打包压缩：
+	>windows常用rar
+	>Mac常用zip
+	>Linux常用tar.gz
+	
+打包:
+	tar -cvf 打包文件.tar  被打包的文件
+解包：
+	tar -xvf 打包文件.rar
+	
+	tar只负责打包，不负责压缩，使用gzip可以实现压缩
+	
+用gzip压缩tar打包后的文件，扩展名一般为xxx.tar.gz
+	linux中最常见的压缩文件格式就是xxx.tar.gz，加上-z参数
+	
+#压缩	tar -zcvf 打包文件.tar.gz 被打包压缩的文件
+
+#解压缩  tar -zxvf 打包文件.tar.gz
+		tar -zxvf 打包文件.tar.gz  -C 目标路径(必须存在
+		
+
+bzip2压缩也比较常见，xxx.tar.bz2
+	加上-j参数
+	tar -jcvf 打包文件.tar.bz2 被打包压缩的文件
+	tar -jxvf 打包文件.tar.bz2
+	
+apt:advanced packaging tool,linux下安装包管理工具
+#	sudo apt install 软件包
+#	sudo apt remove 软件名
+#	sudo apt upgrade
+
+配置镜像软件源，可以更快的apt
